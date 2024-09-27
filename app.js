@@ -39,9 +39,11 @@ document.getElementById("register").addEventListener("click", function () {
         password: password,
         email: email,
         name: name,
+      }).then(() => {
+        alert("Registered successfully");
+        // Redirect to login page
+        window.location.href = "login.html"; // Change to your login page URL
       });
-      alert("registered successfully");
-      //   console.log(user);
     })
     .catch((error) => {
       const errorCode = error.code;
