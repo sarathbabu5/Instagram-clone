@@ -40,10 +40,9 @@ document.getElementById("register").addEventListener("click", function () {
         email: email,
         name: name,
       });
-      window.location.href = "./main.html";
+      alert("registered successfully");
+      //   console.log(user);
     })
-    // ...
-
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
