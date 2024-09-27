@@ -50,15 +50,15 @@ document.getElementById("button").addEventListener("click", function () {
     });
 });
 
-document.getElementById("logout").addEventListener("click", function () {
-  signOut(auth)
-    .then(() => {
-      // Sign-out successful.
-      console.log("sign-out successful");
-      alert("sign- out successful");
-      document.getElementById("logout").style.display = "none";
-    })
-    .catch((error) => {
-      alert(error);
-    });
-});
+// document.getElementById("logout").addEventListener("click", function () {
+//   signOut(auth)
+//     .then(() => {
+//       // Sign-out successful.
+//       console.log("sign-out successful");
+//       alert("sign- out successful");
+//       document.getElementById("logout").style.display = "none";
+//     })
+//     .catch((error) => {
+//       alert(error);
+//     });
+// });
