@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <div>
+        <h3>Add Post</h3>
+
+        <input type="text" id="title" placeholder="Title" />
+        <input type="file" id="image" accept="images/*" />
+        <button id="submit_btn" onclick="addPost()">Submit</button>
+      </div>
+    </div>
+    <div>
+      <div id="post"></div>
+    </div>
+  </body>
+</html>
+<script>
+  let image_api_key = "b54449a7e7f719a3abcd709bdda78469";
+  async function addPost() {
+    try {
+      let file = document.getElementById("image");
+      let form = new FormData();
+      //   console.log(file.files[0]);
+
+      form.append("image", file.files[0]);
+
+      let response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${image_api_key}`,
+        {
+          method: "POST",
+          body: form,
+        }
+      );
+      let data = await response.json();
+      console.log("data", data);
+      alert("image upload ");
+      document.getElementById("image").innerHTML = "";
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  }
+</script>
