@@ -4,46 +4,139 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <div>
-      <div>
-        <h3>Add Post</h3>
+  <body class="bg-gray-100 p-5">
+    <div class="bg-white p-5 rounded shadow-md mb-5">
+      <h3 class="text-xl font-semibold mb-3">Add Post</h3>
+      <input
+        type="text"
+        id="title"
+        placeholder="Title"
+        class="border p-2 w-full mb-2"
+      />
+      <input
+        type="file"
+        id="image"
+        accept="image/*"
+        onchange="handleImage(event)"
+        class="mb-2"
+      />
+      <button
+        id="submit_btn"
+        onclick="addPost()"
+        class="bg-blue-500 text-white p-2 rounded"
+        disabled
+      >
+        Submit
+      </button>
+    </div>
 
-        <input type="text" id="title" placeholder="Title" />
-        <input type="file" id="image" accept="images/*" />
-        <button id="submit_btn" onclick="addPost()">Submit</button>
-      </div>
-    </div>
-    <div>
-      <div id="post"></div>
-    </div>
+    <div id="post" class="space-y-4"></div>
+
+    <script>
+      let images;
+      let submit_btn = document.getElementById("submit_btn");
+      submit_btn.disabled = true;
+      let posts = [];
+
+      async function addPost() {
+        let title = document.getElementById("title").value;
+
+        let newPost = {
+          title: title,
+          images: images,
+        };
+
+        posts.push(newPost);
+        renderPosts();
+
+        document.getElementById("title").value = "";
+        document.getElementById("image").value = "";
+        submit_btn.disabled = true;
+      }
+      let image_api_key = "b54449a7e7f719a3abcd709bdda78469";
+
+      const handleImage = async (event) => {
+        let file = document.getElementById("image");
+        let form = new FormData();
+        form.append("image", file.files[0]);
+        let response = await fetch(
+          `https://api.imgbb.com/1/upload?key=${image_api_key}`,
+          {
+            method: "POST",
+            body: form,
+          }
+        );
+
+        let data = await response.json();
+        images = data.data.display_url;
+        submit_btn.disabled = false;
+      };
+
+      function renderPosts() {
+        const postContainer = document.getElementById("post");
+        postContainer.innerHTML = "";
+
+        posts.forEach((post, index) => {
+          const postDiv = document.createElement("div");
+          postDiv.className = "bg-white p-4 rounded shadow-md mx-auto w-80 ";
+
+          const title = document.createElement("h4");
+          title.className = "text-lg font-semibold mb-2";
+          title.innerText = post.title;
+          postDiv.appendChild(title);
+
+          const img = document.createElement("img");
+          img.src = post.images;
+          img.className = "w-80 h-auto rounded mb-2 mx-auto";
+          postDiv.appendChild(img);
+
+          const actionsDiv = document.createElement("div");
+          actionsDiv.className = "flex space-x-4 mb-2 justify-center";
+
+          // Like button
+          const likeBtn = document.createElement("button");
+          likeBtn.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/128/3128/3128313.png" alt=""> Like`;
+          likeBtn.className = " text-blue-500 hover:underline w-20";
+          actionsDiv.appendChild(likeBtn);
+
+          // Share button
+          const shareBtn = document.createElement("button");
+          shareBtn.innerHTML = `<img src="https://t4.ftcdn.net/jpg/06/22/12/79/240_F_622127913_r4bS5PT6UtRZ3LafV7nfs1bSblflkVNf.jpg" alt=""> Share`;
+          shareBtn.className = "  text-blue-500 hover:underline w-20";
+          shareBtn.onclick = () => alert(`Shared: ${post.title}`);
+          actionsDiv.appendChild(shareBtn);
+
+          // Comment button
+          const commentBtn = document.createElement("button");
+          commentBtn.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/128/1380/1380338.png" alt=""> Comment`;
+          commentBtn.className = "text-blue-500 hover:underline w-20";
+          commentBtn.onclick = () => {
+            const comment = prompt("Enter your comment:");
+            if (comment) {
+              alert(`Comment added: ${comment}`);
+            }
+          };
+          actionsDiv.appendChild(commentBtn);
+
+          // Delete button
+          const deleteBtn = document.createElement("button");
+          deleteBtn.innerText = "Delete";
+          deleteBtn.className = " bg-red-500 text-white p-1 rounded";
+          deleteBtn.onclick = () => {
+            posts.splice(index, 1);
+            renderPosts();
+          };
+          actionsDiv.appendChild(deleteBtn);
+
+          postDiv.appendChild(actionsDiv);
+          postContainer.appendChild(postDiv);
+        });
+      }
+    </script>
   </body>
 </html>
-<script>
-  let image_api_key = "b54449a7e7f719a3abcd709bdda78469";
-  async function addPost() {
-    try {
-      let file = document.getElementById("image");
-      let form = new FormData();
-      //   console.log(file.files[0]);
-
-      form.append("image", file.files[0]);
-
-      let response = await fetch(
-        `https://api.imgbb.com/1/upload?key=${image_api_key}`,
-        {
-          method: "POST",
-          body: form,
-        }
-      );
-      let data = await response.json();
-      console.log("data", data);
-      alert("image upload ");
-      document.getElementById("image").innerHTML = "";
-    } catch (error) {
-      console.log(error);
-      alert(error);
-    }
-  }
-</script>
