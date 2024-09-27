@@ -40,7 +40,7 @@ document.getElementById("register").addEventListener("click", function () {
         email: email,
         name: name,
       });
-      window.location.reload();
+      window.location.href = "./main.html";
     })
     // ...
 

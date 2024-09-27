@@ -44,6 +44,7 @@ document.getElementById("login").addEventListener("click", function () {
 
       console.log("user", user);
       alert("login successfully");
+      window.location.href = "./main.html";
     })
 
     .catch((error) => {
